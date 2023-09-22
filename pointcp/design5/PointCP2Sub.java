@@ -1,4 +1,4 @@
-package design2;
+package design5;
 
 // This file contains material supporting section 2.9 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
@@ -14,20 +14,8 @@ package design2;
  * @author Dr Timothy C. Lethbridge
  * @version July 2000
  */
-public class PointCP2Sub
+public class PointCP2Sub extends PointCP5
 {
-  //Instance variables ************************************************
-  /**
-   * Contains the current value of RHO
-   */
-  private double rho;
-  
-  /**
-   * Contains the current value of THETA
-   */
-  private double theta;
-	
-  
   //Constructors ******************************************************
 
   /**
@@ -35,8 +23,7 @@ public class PointCP2Sub
    */
   public PointCP2Sub(double rho, double theta)
   {
-    this.rho = rho;
-    this.theta = theta;
+    super('P', rho, theta);
   }
 	
   
@@ -45,41 +32,23 @@ public class PointCP2Sub
  
   public double getX()
   {
-    return (Math.cos(Math.toRadians(theta)) * rho);
+    return (Math.cos(Math.toRadians(this.getTheta())) * this.getRho());
   }
   
   public double getY()
   {
 
-    return (Math.sin(Math.toRadians(theta)) * rho);
+    return (Math.sin(Math.toRadians(this.getTheta())) * this.getRho());
   }
   
   public double getRho()
   {
-    return rho;
+    return this.xOrRho;
   }
   
   public double getTheta()
   {
-    return theta;
-  }
-
-  /**
-   * Calculates the distance in between two points using the Pythagorean
-   * theorem  (C ^ 2 = A ^ 2 + B ^ 2). Not needed until E2.30.
-   *
-   * @param pointA The first point.
-   * @param pointB The second point.
-   * @return The distance between the two points.
-   */
-  public double getDistance(PointCP2Sub pointB)
-  {
-    // Obtain differences in X and Y, sign is not important as these values
-    // will be squared later.
-    double deltaX = getX() - pointB.getX();
-    double deltaY = getY() - pointB.getY();
-    
-    return Math.sqrt((Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
+    return this.yOrTheta;
   }
 
   /**
@@ -112,6 +81,6 @@ public class PointCP2Sub
    */
   public String toString()
   {
-    return "Stored as Polar [" + getRho() + "," + getTheta() + "]" + "\n";
+    return "Stored as Polar [" + getRho() + "," + getTheta() + "]";
   }
 }
