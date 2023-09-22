@@ -107,6 +107,6 @@ public class PointCP3
    */
   public String toString()
   {
-    return "Stored as Cartesian  (" + getX() + "," + getY() + ")" + "\n";
+    return "Stored as Cartesian  (" + getX() + "," + getY() + ")";
   }
 }

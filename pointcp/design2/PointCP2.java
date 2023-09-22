@@ -112,6 +112,6 @@ public class PointCP2
    */
   public String toString()
   {
-    return "Stored as Polar [" + getRho() + "," + getTheta() + "]" + "\n";
+    return "Stored as Polar [" + getRho() + "," + getTheta() + "]";
   }
 }
