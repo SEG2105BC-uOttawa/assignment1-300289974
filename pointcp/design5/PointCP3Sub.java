@@ -1,4 +1,4 @@
-package design3;
+package design5;
 
 // This file contains material supporting section 2.9 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
@@ -14,29 +14,15 @@ package design3;
  * @author Dr Timothy C. Lethbridge
  * @version July 2000
  */
-public class PointCP3Sub
+public class PointCP3Sub extends PointCP5
 {
-  //Instance variables ************************************************
-
-  /**
-   * Contains the current value of X
-   */
-  private double x;
-  
-  /**
-   * Contains the current value of Y
-   */
-  private double y;
-	
-  
   //Constructors ******************************************************
 
   /**
    * Constructs a coordinate object, with a type identifier.
    */
   public PointCP3Sub(double x, double y) {
-    this.x = x;
-    this.y = y;
+    super('C', x, y);
   }
 	
   
@@ -45,40 +31,22 @@ public class PointCP3Sub
  
   public double getX()
   {
-    return x;
+    return this.xOrRho;
   }
   
   public double getY()
   {
-    return y;
+    return this.yOrTheta;
   }
   
   public double getRho()
   {
-    return (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+    return (Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2)));
   }
   
   public double getTheta()
   {
-    return Math.toDegrees(Math.atan2(y, x));
-  }
-
-  /**
-   * Calculates the distance in between two points using the Pythagorean
-   * theorem  (C ^ 2 = A ^ 2 + B ^ 2). Not needed until E2.30.
-   *
-   * @param pointA The first point.
-   * @param pointB The second point.
-   * @return The distance between the two points.
-   */
-  public double getDistance(PointCP3Sub pointB)
-  {
-    // Obtain differences in X and Y, sign is not important as these values
-    // will be squared later.
-    double deltaX = getX() - pointB.getX();
-    double deltaY = getY() - pointB.getY();
-    
-    return Math.sqrt((Math.pow(deltaX, 2) + Math.pow(deltaY, 2)));
+    return Math.toDegrees(Math.atan2(this.getY(), this.getX()));
   }
 
   /**
@@ -107,6 +75,6 @@ public class PointCP3Sub
    */
   public String toString()
   {
-    return "Stored as Cartesian  (" + getX() + "," + getY() + ")" + "\n";
+    return "Stored as Cartesian  (" + getX() + "," + getY() + ")";
   }
 }
