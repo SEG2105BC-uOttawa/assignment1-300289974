@@ -1,3 +1,5 @@
+package design5;
+
 // This file contains material supporting section 2.9 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at http://www.site.uottawa.ca/school/research/lloseng/
@@ -12,7 +14,7 @@
  * @author Dr Timothy C. Lethbridge
  * @version July 2000
  */
-public class PointCP5
+public abstract class PointCP5
 {
   //Instance variables ************************************************
 
@@ -26,13 +28,13 @@ public class PointCP5
    * Contains the current value of X or RHO depending on the type
    * of coordinates.
    */
-  private double xOrRho;
+  protected double xOrRho;
   
   /**
    * Contains the current value of Y or THETA value depending on the
    * type of coordinates.
    */
-  private double yOrTheta;
+  protected double yOrTheta;
 	
   
   //Constructors ******************************************************
@@ -53,38 +55,11 @@ public class PointCP5
   //Instance methods **************************************************
  
  
-  public double getX()
-  {
-    if(typeCoord == 'C') 
-      return xOrRho;
-    else 
-      return (Math.cos(Math.toRadians(yOrTheta)) * xOrRho);
-  }
-  
-  public double getY()
-  {
-    if(typeCoord == 'C') 
-      return yOrTheta;
-    else 
-      return (Math.sin(Math.toRadians(yOrTheta)) * xOrRho);
-  }
-  
-  public double getRho()
-  {
-    if(typeCoord == 'P') 
-      return xOrRho;
-    else 
-      return (Math.sqrt(Math.pow(xOrRho, 2) + Math.pow(yOrTheta, 2)));
-  }
-  
-  public double getTheta()
-  {
-    if(typeCoord == 'P')
-      return yOrTheta;
-    else 
-      return Math.toDegrees(Math.atan2(yOrTheta, xOrRho));
-  }
-  
+  public abstract double getX();
+  public abstract double getY();
+  public abstract double getRho();
+  public abstract double getTheta();
+  public abstract String toString();
 	
   /**
    * Converts Cartesian coordinates to Polar coordinates.
@@ -150,20 +125,8 @@ public class PointCP5
     double X = getX();
     double Y = getY();
         
-    return new PointCP5('C',
+    return new PointCP3Sub(
       (Math.cos(radRotation) * X) - (Math.sin(radRotation) * Y),
       (Math.sin(radRotation) * X) + (Math.cos(radRotation) * Y));
-  }
-
-  /**
-   * Returns information about the coordinates.
-   *
-   * @return A String containing information about the coordinates.
-   */
-  public String toString()
-  {
-    return "Stored as " + (typeCoord == 'C' 
-       ? "Cartesian  (" + getX() + "," + getY() + ")"
-       : "Polar [" + getRho() + "," + getTheta() + "]") + "\n";
   }
 }
