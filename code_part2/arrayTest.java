@@ -4,10 +4,12 @@ import java.util.Vector;
 
 /*
  * Note, due to the high number of elements
- * required to reach a 10 second runtime for
+ * required to reach a ~10 second runtime for
  * ArrayList, this java program requires at
  * least 12gb of memory. Please run the class
- * file with -Xmx12g to allocate this memory
+ * file with -Xmx12g to allocate this memory.
+ * 
+ * > java -Xmx12g arrayTest
  */
 public class arrayTest {
     public static void main(String[] args) {
@@ -68,8 +70,8 @@ public class arrayTest {
         System.out.println("Time taken to " + task + ": " + runtimeSeconds);
     }
 
-    public static int sum(Iterator<Integer> iterator) {
-        int sum = 0;
+    public static long sum(Iterator<Integer> iterator) {
+        long sum = 0;
         while (iterator.hasNext()) {
             sum += iterator.next();
         }
@@ -77,8 +79,8 @@ public class arrayTest {
         return sum;
     }
 
-    public static int sum(int[] array) {
-        int sum = 0;
+    public static long sum(int[] array) {
+        long sum = 0;
         for (int i=0; i < array.length; i++) {
             sum += array[i];
         }
