@@ -2,37 +2,47 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
+/*
+ * Note, due to the high number of elements
+ * required to reach a 10 second runtime for
+ * ArrayList, this java program requires at
+ * least 12gb of memory. Please run the class
+ * file with -Xmx12g to allocate this memory
+ */
 public class arrayTest {
     public static void main(String[] args) {
         long start, end;
-        int length = 1000;
-        intGenerator generator = new intGenerator(length*3, 0, 10);
+        intGenerator generator;
+        int length = 800000000;
         ArrayList<Integer> testArrayList = new ArrayList<Integer>(length);
         Vector<Integer> testVector = new Vector<Integer>(length);
         int[] testArray = new int[length];
 
+        generator = new intGenerator(length, 0, 10);
         start = System.nanoTime();
         for (int i=0; i < length; i++) {
             testArrayList.add(generator.getNext());
         }
         end = System.nanoTime();
-        printRuntimeSeconds(start, end, "add integers to all arrays"); 
+        printRuntimeSeconds(start, end, "add integers to an array list"); 
 
+        generator = new intGenerator(length, 0, 10);
         start = System.nanoTime();
         for (int i=0; i < length; i++) {
             testVector.add(generator.getNext());
         }
         end = System.nanoTime();
-        printRuntimeSeconds(start, end, "add integers to all arrays");
+        printRuntimeSeconds(start, end, "add integers to a vector");
 
+        generator = new intGenerator(length, 0, 10);
         start = System.nanoTime();
         for (int i=0; i < length; i++) {
             testArray[i] = generator.getNext();
         }
         end = System.nanoTime();
-        printRuntimeSeconds(start, end, "add integers to all arrays");
+        printRuntimeSeconds(start, end, "add integers to an array");
 
-        int elementSum;
+        long elementSum;
 
         start = System.nanoTime();
         elementSum = sum(testArrayList.iterator());
