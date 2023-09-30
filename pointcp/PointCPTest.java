@@ -2,7 +2,19 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at http://www.site.uottawa.ca/school/research/lloseng/
 
-import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Random;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import design1.PointCP;
+import design2.PointCP2;
+import design3.PointCP3;
+import design5.PointCP2Sub;
+import design5.PointCP3Sub;
+import design5.PointCP5;
 
 /**
  * This class prompts the user for a set of coordinates, and then 
@@ -13,151 +25,202 @@ import java.io.*;
  * @author Paul Holden
  * @version July 2000
  */
-public class PointCPTest
-{
-  //Class methods *****************************************************
+public class PointCPTest {
+  final static String LOG_FILE = "PointCPTest_log.txt";
+  final static int NUM_TESTS = 10;
+  final static int NUM_METHODS = 6;
 
-  /**
-   * This method is responsible for the creation of the PointCP
-   * object.  This can be done in two ways; the first, by using the
-   * command line and running the program using <code> java 
-   * PointCPTest &lt;coordtype (c/p)&gt; &lt;X/RHO&gt; &lt;Y/THETA&gt;
-   * </code> and the second by getting the program to prompt the user.
-   * If the user does not enter a valid sequence at the command line,
-   * the program will prompte him or her.
-   *
-   * @param args[0] The coordinate type.  P for polar and C for
-   *                cartesian.
-   * @param args[1] The value of X or RHO.
-   * @param args[2] The value of Y or THETA.
-   */
-  public static void main(String[] args)
-  {
-    PointCP point;
+  public static void main(String[] args) throws IOException{
+    double[] coords = randCoords();
 
-    System.out.println("Cartesian-Polar Coordinates Conversion Program");
+    FileWriter fileWriter = new FileWriter(LOG_FILE, false);
+    fileWriter.close();
 
-    // Check if the user input coordinates from the command line
-    // If he did, create the PointCP object from these arguments.
-    // If he did not, prompt the user for them.
-    try
-    {
-      point = new PointCP(args[0].toUpperCase().charAt(0), 
-        Double.valueOf(args[1]).doubleValue(), 
-        Double.valueOf(args[2]).doubleValue());
+    ArrayList<Long> data = new ArrayList<>();
+    ArrayList<Long> point1Data = new ArrayList<>();
+    ArrayList<Long> point2Data = new ArrayList<>();
+    ArrayList<Long> point3Data = new ArrayList<>();
+    ArrayList<Long> point4Data = new ArrayList<>();
+    ArrayList<Long> point5Data = new ArrayList<>();
+
+    for (int i=0; i < NUM_TESTS; i++) {
+      PointCP point1 = new PointCP(randTypeCoords(), coords[0], coords[1]);
+      PointCP2 point2 = new PointCP2(point1.getRho(), point1.getTheta());
+      PointCP3 point3 = new PointCP3(point1.getX(), point1.getY());
+      PointCP5 point4 = new PointCP2Sub(point1.getRho(), point1.getTheta());
+      PointCP5 point5 = new PointCP3Sub(point1.getX(), point1.getY());
+
+      data = Tests.point1Test(point1);
+      point1Data.addAll(data);
+      logStats(data, "point1");
+
+      data = Tests.point2Test(point2);
+      point2Data.addAll(data);
+      logStats(data, "point2");
+
+      data = Tests.point3Test(point3);
+      point3Data.addAll(data);
+      logStats(data, "point3");
+
+      data = Tests.point4Test(point4);
+      point4Data.addAll(data);
+      logStats(data, "point4");
+
+      data = Tests.point5Test(point5);
+      point5Data.addAll(data);
+      logStats(data, "point5");
     }
-    catch(Exception e)
-    {
-      // If we arrive here, it is because either there were no
-      // command line arguments, or they were invalid
-      if(args.length != 0)
-        System.out.println("Invalid arguments on command line");
 
-      try
-      {
-        point = getInput();
-      }
-      catch(IOException ex)
-      {
-        System.out.println("Error getting input. Ending program.");
-        return;
-      }
-    }
-    System.out.println("\nYou entered:\n" + point);
-    point.convertStorageToCartesian();
-    System.out.println("\nAfter asking to store as Cartesian:\n" + point);
-    point.convertStorageToPolar();
-    System.out.println("\nAfter asking to store as Polar:\n" + point);
+    printMinMedMax(point1Data, "point1");
+    printMinMedMax(point2Data, "point2");
+    printMinMedMax(point3Data, "point3");
+    printMinMedMax(point4Data, "point4");
+    printMinMedMax(point5Data, "point5");
   }
 
-  /**
-   * This method obtains input from the user and verifies that
-   * it is valid.  When the input is valid, it returns a PointCP
-   * object.
-   *
-   * @return A PointCP constructed using information obtained 
-   *         from the user.
-   * @throws IOException If there is an error getting input from
-   *         the user.
-   */
-  private static PointCP getInput() throws IOException
-  {
-    byte[] buffer = new byte[1024];  //Buffer to hold byte input
-    boolean isOK = false;  // Flag set if input correct
-    String theInput = "";  // Input information
-    
-    //Information to be passed to the constructor
-    char coordType = 'A'; // Temporary default, to be set to P or C
-    double a = 0.0;
-    double b = 0.0;
+  public static double[] randCoords() {
+    Random random = new Random(System.nanoTime());
+    return new double[]{random.nextDouble(-1000, 1000), random.nextDouble(-1000, 1000)};
+  }
 
-    // Allow the user to enter the three different arguments
-    for (int i = 0; i < 3; i++)
-    {
-      while (!(isOK))
-      {
-        isOK = true;  //flag set to true assuming input will be valid
-          
-        // Prompt the user
-        if (i == 0) // First argument - type of coordinates
-        {
-          System.out.print("Enter the type of Coordinates you "
-            + "are inputting ((C)artesian / (P)olar): ");
-        }
-        else // Second and third arguments
-        {
-          System.out.print("Enter the value of " 
-            + (coordType == 'C' 
-              ? (i == 1 ? "X " : "Y ")
-              : (i == 1 ? "Rho " : "Theta ")) 
-            + "using a decimal point(.): ");
-        }
+  public static char randTypeCoords() {
+    Random random = new Random(System.nanoTime());
+    int num = random.nextInt(0,2);
+    return (num == 0 ? 'C' : 'P');
+  }
 
-        // Get the user's input      
-       
-        // Initialize the buffer before we read the input
-        for(int k=0; k<1024; k++)
-        	buffer[k] = '\u0020';        
-             
-        System.in.read(buffer);
-        theInput = new String(buffer).trim();
-        
-        // Verify the user's input
-        try
-        {
-          if (i == 0) // First argument -- type of coordinates
-          {
-            if (!((theInput.toUpperCase().charAt(0) == 'C') 
-              || (theInput.toUpperCase().charAt(0) == 'P')))
-            {
-              //Invalid input, reset flag so user is prompted again
-              isOK = false;
-            }
-            else
-            {
-              coordType = theInput.toUpperCase().charAt(0);
-            }
-          }
-          else  // Second and third arguments
-          {
-            //Convert the input to double values
-            if (i == 1)
-              a = Double.valueOf(theInput).doubleValue();
-            else
-              b = Double.valueOf(theInput).doubleValue();
-          }
-        }
-        catch(Exception e)
-        {
-        	System.out.println("Incorrect input");
-        	isOK = false;  //Reset flag as so not to end while loop
-        }
+  public static void printStats(ArrayList<Long> stats, String objectName) {
+    String method = "";
+    for (int i=0; i < stats.size(); i++) {
+      switch (i) {
+        case 0:
+          method = "get X";
+          break;
+
+        case 1:
+          method = "get Y";
+          break;
+
+        case 2:
+          method = "get Rho";
+          break;
+
+        case 3:
+          method = "get Theta";
+          break;
+
+        case 4:
+          method = "get distance";
+          break;
+
+        case 5:
+          method = "rotate point";
+          break;
+      
+        default:
+          break;
       }
-
-      //Reset flag so while loop will prompt for other arguments
-      isOK = false;
+      System.out.println("Time to " + method + " of " +
+        objectName + " 10000000 times: " + String.valueOf((stats.get(i))/Math.pow(10, 9)));
     }
-    //Return a new PointCP object
-    return (new PointCP(coordType, a, b));
+  }
+
+  public static void logStats(ArrayList<Long> stats, String objectName) throws IOException {
+    FileWriter fileWriter = new FileWriter(LOG_FILE, true);
+    String method = "";
+    
+    for (int i=0; i < stats.size(); i++) {
+      switch (i) {
+        case 0:
+          method = "get X";
+          break;
+
+        case 1:
+          method = "get Y";
+          break;
+
+        case 2:
+          method = "get Rho";
+          break;
+
+        case 3:
+          method = "get Theta";
+          break;
+
+        case 4:
+          method = "get distance";
+          break;
+
+        case 5:
+          method = "rotate point";
+          break;
+      
+        default:
+          break;
+      }
+      fileWriter.append("Time to " + method + " of " +
+        objectName + " 10000000 times: " + String.valueOf((stats.get(i))/Math.pow(10, 9)) + "\n");
+    }
+    fileWriter.close();
+  }
+
+  public static void printMinMedMax(ArrayList<Long> stats, String objectName) {
+    Iterator<Long> iterator = stats.iterator();
+    int methodNum = -1;
+
+    double[] getXTimes = new double[NUM_TESTS];
+    double[] getYTimes = new double[NUM_TESTS];
+    double[] getRhoTimes = new double[NUM_TESTS];
+    double[] getThetaTimes = new double[NUM_TESTS];
+    double[] getDistanceTimes = new double[NUM_TESTS];
+    double[] rotatePointTimes = new double[NUM_TESTS];
+
+    while (iterator.hasNext()) {
+      methodNum++;
+      switch (methodNum % 6) {
+        case 0:
+          getXTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          break;
+
+        case 1:
+          getYTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          break;
+
+        case 2:
+          getRhoTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          break;
+
+        case 3:
+          getThetaTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          break;
+
+        case 4:
+          getDistanceTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          break;
+      
+        case 5:
+          rotatePointTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    Arrays.sort(getXTimes);
+    Arrays.sort(getYTimes);
+    Arrays.sort(getRhoTimes);
+    Arrays.sort(getThetaTimes);
+    Arrays.sort(getDistanceTimes);
+    Arrays.sort(rotatePointTimes);
+
+    System.out.println(objectName);
+    System.out.println(String.format("%s    Min: %s    Median: %s    Max: %s", "getX()", getXTimes[0], getXTimes[NUM_TESTS/2], getXTimes[NUM_TESTS-1]));
+    System.out.println(String.format("%s    Min: %s    Median: %s    Max: %s", "getY()", getYTimes[0], getYTimes[NUM_TESTS/2], getYTimes[NUM_TESTS-1]));
+    System.out.println(String.format("%s    Min: %s    Median: %s    Max: %s", "getRho()", getRhoTimes[0], getRhoTimes[NUM_TESTS/2], getRhoTimes[NUM_TESTS-1]));
+    System.out.println(String.format("%s    Min: %s    Median: %s    Max: %s", "getTheta()", getThetaTimes[0], getThetaTimes[NUM_TESTS/2], getThetaTimes[NUM_TESTS-1]));
+    System.out.println(String.format("%s    Min: %s    Median: %s    Max: %s", "getDistance()", getDistanceTimes[0], getDistanceTimes[NUM_TESTS/2], getDistanceTimes[NUM_TESTS-1]));
+    System.out.println(String.format("%s    Min: %s    Median: %s    Max: %s", "rotatePoint()", rotatePointTimes[0], rotatePointTimes[NUM_TESTS/2], rotatePointTimes[NUM_TESTS-1]));
+    System.out.println();
   }
 }
