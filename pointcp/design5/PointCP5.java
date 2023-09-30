@@ -17,12 +17,6 @@ package design5;
 public abstract class PointCP5
 {
   //Instance variables ************************************************
-
-  /**
-   * Contains C(artesian) or P(olar) to identify the type of
-   * coordinates that are being dealt with.
-   */
-  private char typeCoord;
   
   /**
    * Contains the current value of X or RHO depending on the type
@@ -48,7 +42,6 @@ public abstract class PointCP5
       throw new IllegalArgumentException();
     this.xOrRho = xOrRho;
     this.yOrTheta = yOrTheta;
-    typeCoord = type;
   }
 	
   
@@ -60,38 +53,6 @@ public abstract class PointCP5
   public abstract double getRho();
   public abstract double getTheta();
   public abstract String toString();
-	
-  /**
-   * Converts Cartesian coordinates to Polar coordinates.
-   */
-  public void convertStorageToPolar()
-  {
-    if(typeCoord != 'P')
-    {
-      //Calculate RHO and THETA
-      double temp = getRho();
-      yOrTheta = getTheta();
-      xOrRho = temp;
-      
-      typeCoord = 'P';  //Change coord type identifier
-    }
-  }
-	
-  /**
-   * Converts Polar coordinates to Cartesian coordinates.
-   */
-  public void convertStorageToCartesian()
-  {
-    if(typeCoord != 'C')
-    {
-      //Calculate X and Y
-      double temp = getX();
-      yOrTheta = getY();
-      xOrRho = temp;
-   
-      typeCoord = 'C';	//Change coord type identifier
-    }
-  }
 
   /**
    * Calculates the distance in between two points using the Pythagorean
