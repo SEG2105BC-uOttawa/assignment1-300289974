@@ -167,6 +167,7 @@ public class PointCPTest {
   public static void printMinMedMax(ArrayList<Long> stats, String objectName) {
     Iterator<Long> iterator = stats.iterator();
     int methodNum = -1;
+    double seconds;
 
     double[] getXTimes = new double[NUM_TESTS];
     double[] getYTimes = new double[NUM_TESTS];
@@ -177,29 +178,31 @@ public class PointCPTest {
 
     while (iterator.hasNext()) {
       methodNum++;
+      seconds = iterator.next() / Math.pow(10, 9);
+      
       switch (methodNum % 6) {
         case 0:
-          getXTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          getXTimes[methodNum / 6] = seconds;
           break;
 
         case 1:
-          getYTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          getYTimes[methodNum / 6] = seconds;
           break;
 
         case 2:
-          getRhoTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          getRhoTimes[methodNum / 6] = seconds;
           break;
 
         case 3:
-          getThetaTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          getThetaTimes[methodNum / 6] = seconds;
           break;
 
         case 4:
-          getDistanceTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          getDistanceTimes[methodNum / 6] = seconds;
           break;
       
         case 5:
-          rotatePointTimes[methodNum / 6] = iterator.next() / Math.pow(10, 9);
+          rotatePointTimes[methodNum / 6] = seconds;
           break;
 
         default:
