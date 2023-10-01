@@ -52,25 +52,31 @@ public class PointCPTest {
 
       data = Tests.point1Test(point1);
       point1Data.addAll(data);
+      System.out.print('.');
       logStats(data, "point1");
 
       data = Tests.point2Test(point2);
       point2Data.addAll(data);
       logStats(data, "point2");
+      System.out.print('.');
 
       data = Tests.point3Test(point3);
       point3Data.addAll(data);
       logStats(data, "point3");
+      System.out.print('.');
 
       data = Tests.point4Test(point4);
       point4Data.addAll(data);
       logStats(data, "point4");
+      System.out.print('.');
 
       data = Tests.point5Test(point5);
       point5Data.addAll(data);
       logStats(data, "point5");
+      System.out.print('.');
     }
 
+    System.out.println("");
     printMinMedMax(point1Data, "point1");
     printMinMedMax(point2Data, "point2");
     printMinMedMax(point3Data, "point3");
